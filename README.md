@@ -1,5 +1,5 @@
 # yqt-sdk-java
-# PP-SDK In Action
+# YQT-SDK In Action
 
 > PP-SDK是基于[YQT](http://www.jia007.com)接口封装的开发工具包。她屏蔽了大部分细节、简化了接入流程、同时提供了一些便捷的方法和标准化的参数枚举值。帮助开发者在接入过程中避开一些常见的问题，让开发者快速接入[YQT](http://payplus.yeepay.com)的服务。
 
@@ -62,7 +62,7 @@ apiRequest.addParam("payTool", "WECHAT_SCAN");
 
 ### 响应参数
 
-> 服务返回*PayplusResp*对象 包含的属性和对应的方法如下：
+> 服务返回*ApiResponse*对象 包含的属性和对应的方法如下：
 
 public class ApiResponse {
 
@@ -73,7 +73,7 @@ private ApiStateEnum state;
 private String code;
 
 private String message;
-}```
+}
 
 
 ```
