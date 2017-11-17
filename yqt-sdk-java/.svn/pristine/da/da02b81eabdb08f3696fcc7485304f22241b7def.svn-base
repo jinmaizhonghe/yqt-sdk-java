@@ -1,0 +1,299 @@
+package com.payplus.api.client;
+
+import com.alibaba.fastjson.JSON;
+import com.payplus.api.enumtype.EncryptTypeEnum;
+import com.payplus.api.security.AESUtil;
+import com.payplus.api.util.HttpClient4Utils;
+
+import java.util.*;
+
+/**
+ * Description:
+ *
+ * @author yingjie.wang
+ * @since 17/4/14 下午6:33
+ */
+public class ClientTest {
+
+    private static String merchantNo = "1051100110000069";
+    private static String key = "c93b77ac5c7c4937b45689c8c647726b49f95c7bb20044ec833bff3770276c90";
+
+    public static void main(String[] args) throws Exception {
+        testBillDocDownload();
+    }
+
+    private static void testBillDocDownload() throws Exception {
+//        String url = "http://10.151.30.108:8090/api-center/rest/v2.0/yqt/downloadFile";
+        String url = "https://api.jia007.com/api-center/rest/v2.0/yqt/downloadFile";
+//        String merchantNo = "0000000110000123";
+//        String key = "42ce6124b6ff41d7bbc3ec94e2d772a5234930bc150848a4960d94e459e51220";
+        String basePath = "/Users/YJ/Documents/generator/";
+        String checkDate = "2017-10-18";
+        String bizType = "TRADE";   // TRADE REFUND
+        String merchantNo = "0000000110000123";
+        String key = "42ce6124b6ff41d7bbc3ec94e2d772a5234930bc150848a4960d94e459e51220";
+
+        ApiRequest apiRequest = new ApiRequest(merchantNo, key);
+        apiRequest.setSupportSign(false);
+        apiRequest.setEncryptType(EncryptTypeEnum.AES);
+        apiRequest.addParam("checkDate", checkDate);
+        apiRequest.addParam("bizType", bizType);
+
+        String savePath = basePath + merchantNo+"_" + checkDate.replace("-", "_") + "_" + bizType + ".csv";
+        System.out.println(savePath);
+
+        ApiClient.downloadFile(url, apiRequest, savePath);
+        System.out.println("=====> SUCCESS...");
+    }
+
+    private static void testRegisterMerchant() throws Exception {
+        String url = "https://api.jia007.com/api-center/rest/v1.0/yqt/registerMerchant";
+//        String url = "http://10.151.30.02:8090/api-center/rest/v1.0/yqt/registerMerchant";
+
+        String agentNo = "110999999";
+        String agentKey = "dd02868f71ea493c8e3d73e5b375618d1616c77be35741e9a21008228c4e73cb";
+//        String agentNo = "YA12345678903019";
+//        String agentKey = "737799a7bba44120b63c0b19a1464cc0f2cf9b298f8e41518a9da3cd91fa6b47";
+
+        ApiRequest apiRequest = new ApiRequest(agentNo, agentKey);
+        apiRequest.setSupportSign(false);
+        apiRequest.setEncryptType(EncryptTypeEnum.AES);
+
+        apiRequest.addParam("requestNo", String.valueOf(System.currentTimeMillis()));
+        apiRequest.addParam("agentNo", agentNo);
+        apiRequest.addParam("province", "北京");
+        apiRequest.addParam("city", "北京市");
+        apiRequest.addParam("signedName", "银企通测试20170503");
+        apiRequest.addParam("customerStyle", "PERSON");
+        apiRequest.addParam("idCard", "123456789012345678");
+        apiRequest.addParam("contactor", "测试");
+        apiRequest.addParam("bindMobile", "12345678901");
+//        apiRequest.addParam("legalPerson", "测试哈");
+//        apiRequest.addParam("businessLicence", "093rsnfishfisu");
+        apiRequest.addParam("bankAccountNumber", "6214830108344317");
+        apiRequest.addParam("bankAccountType", "PRIVATE_CASH");
+        apiRequest.addParam("bankBranchName", "招商银行股份有限公司北京东三环支行");
+        apiRequest.addParam("bankBranchCode", "1234");
+        apiRequest.addParam("accountName", "测试");
+        apiRequest.addParam("bankCardProvince", "北京");
+        apiRequest.addParam("bankCardCity", "北京市");
+        apiRequest.addParam("minSettleAmount", "0.01");
+        apiRequest.addParam("merchantShortName", "test");
+        apiRequest.addParam("servicePhone", "1234567890");
+
+        List<PayProduct> payProductList = new ArrayList<PayProduct>();
+        PayProduct payProduct = new PayProduct();
+        payProduct.setBusiness("102102002");
+        payProduct.setFeeRate("0.03");
+        payProduct.setPayTool("WECHAT_SCAN");
+        payProductList.add(payProduct);
+        System.out.println("payProduct:" + JSON.toJSONString(payProductList));
+        apiRequest.addParam("payProduct", JSON.toJSONString(payProductList));
+
+        System.out.println("apiRequest:" + apiRequest.toString());
+        System.out.println("url:" + url);
+        ApiResponse apiResponse = ApiClient.post(url, apiRequest);
+        System.out.println(apiResponse.getState());
+        System.out.println("apiResponse:" + JSON.toJSONString(apiResponse));
+    }
+
+    private static void testModifyMerchantInfo() throws Exception {
+//        String url = "https://api.jia007.com/api-center/rest/v1.0/yqt/modifyMerchantInfo";
+        String url = "http://10.151.30.02:8090/api-center/rest/v1.0/yqt/modifyMerchantInfo";
+
+//        String agentNo = "110999999";
+//        String agentKey = "dd02868f71ea493c8e3d73e5b375618d1616c77be35741e9a21008228c4e73cb";
+        String agentNo = "YA12345678903019";
+        String agentKey = "737799a7bba44120b63c0b19a1464cc0f2cf9b298f8e41518a9da3cd91fa6b47";
+        ApiRequest apiRequest = new ApiRequest(agentNo, agentKey);
+        apiRequest.setSupportSign(false);
+        apiRequest.setEncryptType(EncryptTypeEnum.AES);
+
+        apiRequest.addParam("requestNo", String.valueOf(System.currentTimeMillis()));
+        apiRequest.addParam("merchantNo", "YM12345678903015");
+        apiRequest.addParam("bindMobile", "1370000731");
+
+        List<PayProduct> payProductList = new ArrayList<PayProduct>();
+        PayProduct payProduct = new PayProduct();
+        payProduct.setBusiness("102102002");
+        payProduct.setFeeRate("0.03");
+        payProduct.setPayTool("WECHAT_SCAN");
+        payProductList.add(payProduct);
+        System.out.println("payProduct:" + JSON.toJSONString(payProductList));
+        apiRequest.addParam("payProduct", JSON.toJSONString(payProductList));
+
+        System.out.println("apiRequest:" + apiRequest.toString());
+        System.out.println("url:" + url);
+        ApiResponse apiResponse = ApiClient.post(url, apiRequest);
+        System.out.println(apiResponse.getState());
+        System.out.println("apiResponse:" + JSON.toJSONString(apiResponse));
+//        System.out.println(new String(apiResponse.getMessage().getBytes("UTF-8"), "GBK"));
+    }
+
+    private static void testConsume() throws Exception {
+//        String url = "https://api.jia007.com/api-center/rest/v1.0/pos/consume";
+        String url = "https://api.jia007.com/api-center/rest/v1.0/yqt/consume";
+        ApiRequest apiRequest = new ApiRequest(merchantNo, key);
+        apiRequest.setSupportSign(false);
+        apiRequest.setEncryptType(EncryptTypeEnum._3DES);
+        apiRequest.setEncryptType(EncryptTypeEnum.AES);
+
+        apiRequest.addParam("requestNo", String.valueOf(System.currentTimeMillis()));
+        apiRequest.addParam("merchantNo", merchantNo);
+        apiRequest.addParam("orderAmount", "0.02");
+        apiRequest.addParam("payTool", "WECHAT_SCAN");
+        apiRequest.addParam("currency", "CNY");
+        apiRequest.addParam("merchantExpireTime", "90");
+        apiRequest.addParam("orderDate", "2017-05-09 17:00:00");
+
+        apiRequest.addParam("productName", "test...");
+        apiRequest.addParam("serverCallbackUrl", "www.baidu.com");
+        apiRequest.addParam("sceneType", "MIS");
+
+//        apiRequest.addParam("openId", "ogiZrwJdUAA5SKVNvl2DeFD9BLdU");
+//        apiRequest.addParam("appid", "wx95f2b27daf603387");
+
+        System.out.println("apiRequest:" + apiRequest.toString());
+        System.out.println("url:" + url);
+        ApiResponse apiResponse = ApiClient.post(url, apiRequest);
+        System.out.println(apiResponse.getState());
+        System.out.println("apiResponse:" + JSON.toJSONString(apiResponse));
+    }
+
+    private static void testQueryOrder() throws Exception {
+//        String url = "https://api.jia007.com/api-center/rest/v1.0/pos/queryOrder";
+        String url = "https://api.jia007.com/api-center/rest/v1.0/yqt/queryOrder";
+        ApiRequest apiRequest = new ApiRequest(merchantNo, key);
+        apiRequest.setSupportSign(false);
+        apiRequest.setEncryptType(EncryptTypeEnum._3DES);
+        apiRequest.setEncryptType(EncryptTypeEnum.AES);
+
+        apiRequest.addParam("trxRequestNo", "1493717512521");
+        apiRequest.addParam("merchantNo", merchantNo);
+//        apiRequest.addParam("deviceNo", "");
+
+        System.out.println("apiRequest:" + apiRequest.toString());
+        System.out.println("url:" + url);
+        ApiResponse apiResponse = ApiClient.post(url, apiRequest);
+        System.out.println(apiResponse.getState());
+        System.out.println("apiResponse:" + JSON.toJSONString(apiResponse));
+    }
+
+    private static void testRefund() throws Exception {
+//        String url = "https://api.jia007.com/api-center/rest/v1.0/pos/refund";
+        String url = "https://api.jia007.com/api-center/rest/v1.0/yqt/refund";
+        ApiRequest apiRequest = new ApiRequest(merchantNo, key);
+        apiRequest.setSupportSign(false);
+        apiRequest.setEncryptType(EncryptTypeEnum._3DES);
+        apiRequest.setEncryptType(EncryptTypeEnum.AES);
+
+        apiRequest.addParam("requestNo", String.valueOf(System.currentTimeMillis()));
+        apiRequest.addParam("merchantNo", merchantNo);
+        apiRequest.addParam("trxRequestNo", "1493717512521");
+        apiRequest.addParam("refundAmount", "0.01");
+
+        System.out.println("apiRequest:" + apiRequest.toString());
+        System.out.println("url:" + url);
+        ApiResponse apiResponse = ApiClient.post(url, apiRequest);
+        System.out.println(apiResponse.getState());
+        System.out.println("apiResponse:" + JSON.toJSONString(apiResponse));
+    }
+
+    private static void testQueryRefund() throws Exception {
+//        String url = "https://api.jia007.com/api-center/rest/v1.0/pos/queryRefund";
+        String url = "https://api.jia007.com/api-center/rest/v1.0/yqt/queryRefund";
+        ApiRequest apiRequest = new ApiRequest(merchantNo, key);
+        apiRequest.setSupportSign(false);
+        apiRequest.setEncryptType(EncryptTypeEnum._3DES);
+        apiRequest.setEncryptType(EncryptTypeEnum.AES);
+
+        apiRequest.addParam("refundRequestNo", "1493717924383");
+        apiRequest.addParam("merchantNo", merchantNo);
+        apiRequest.addParam("trxRequestNo", "1493717512521");
+
+        System.out.println("apiRequest:" + apiRequest.toString());
+        System.out.println("url:" + url);
+        ApiResponse apiResponse = ApiClient.post(url, apiRequest);
+        System.out.println(apiResponse.getState());
+        System.out.println("apiResponse:" + JSON.toJSONString(apiResponse));
+    }
+
+    private static class PayProduct {
+        private String business;
+        private String payTool;
+        private String feeRate;
+
+        public String getBusiness() {
+            return business;
+        }
+
+        public void setBusiness(String business) {
+            this.business = business;
+        }
+
+        public String getPayTool() {
+            return payTool;
+        }
+
+        public void setPayTool(String payTool) {
+            this.payTool = payTool;
+        }
+
+        public String getFeeRate() {
+            return feeRate;
+        }
+
+        public void setFeeRate(String feeRate) {
+            this.feeRate = feeRate;
+        }
+    }
+
+    private static void demo() {
+        // 商编
+        String merchantNo = "1051100110000069";
+        // 密钥
+        String key = "c93b77ac5c7c4937b45689c8c647726b49f95c7bb20044ec833bff3770276c90";
+        // 请求地址
+        String url = "https://api.jia007.com/api-center/rest/v1.0/yqt/consume";
+        // 请求参数
+        String requestNo = String.valueOf(System.currentTimeMillis());
+        String productName = "test";
+        String productDesc = "this is my test";
+        String orderAmount = "0.9";
+        String merchantExpireTime = "20";
+        String merchantOrderTime = "2017-05-08 15:30:45";
+        String clientIp = "172.19.42.183";
+        String scenceType = "MIS";
+        String Currency = "CNY";
+        String payTool = "WECHAT_SCAN";
+        String webCallbackUrl = "http://www.yeepay.com";
+        String serverCallbackurl = "http://www.yeepay.com";
+        // TreeMap: 按字典顺序排列
+        Map<String, String> map = new TreeMap<String, String>();
+        map.put("requestNo", requestNo);
+        map.put("merchantNo", merchantNo);
+        map.put("productName", productName);
+        map.put("productDesc", productDesc);
+        map.put("orderAmount", orderAmount);
+        map.put("expireTime", merchantExpireTime);
+        map.put("orderDate", merchantOrderTime);
+        map.put("clientIp", clientIp);
+        map.put("sceneType", scenceType);
+        map.put("currency", Currency);
+        map.put("payTool", payTool);
+        map.put("webCallbackUrl", webCallbackUrl);
+        map.put("serverCallbackUrl", serverCallbackurl);
+        // 将treeMap转换为json串
+        String json = JSON.toJSONString(map);
+        // 使用AES加密算法,加密json串,生成加密data; 加密密钥使用key前16位
+        String data = AESUtil.encrypt(json, key.substring(0, 16));
+        // 发起http请求,请求参数:merchantNo、data
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("merchantNo", merchantNo);
+        params.put("data", data);
+        // 向地址url发起post请求,编码格式:utf-8,请求参数:params
+        String resultString = HttpClient4Utils.sendHttpRequest(url, params, "utf-8", true);
+        // 响应参数resultString是一个加密串,需要进行解密,解密后获得一个json串
+        String resultJsonStr = AESUtil.decrypt(resultString, key.substring(0, 16));
+    }
+}
