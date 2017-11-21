@@ -1,7 +1,7 @@
 # yqt-sdk-java
 # YQT-SDK In Action
 
-> YQT-SDK是基于[YQT]()接口封装的开发工具包。她屏蔽了大部分细节、简化了接入流程、同时提供了一些便捷的方法和标准化的参数枚举值。帮助开发者在接入过程中避开一些常见的问题，让开发者快速接入[YQT]()的服务。
+> YQT-SDK是基于[YQT](http://doc.jia007.com)接口封装的开发工具包。她屏蔽了大部分细节、简化了接入流程、同时提供了一些便捷的方法和标准化的参数枚举值。帮助开发者在接入过程中避开一些常见的问题，让开发者快速接入[YQT](http://doc.jia007.com)的服务。
 
 > *注: 该开发工具包仅支持Java语言，其他语言开发者可以参照YQT的官方文档。*
 
@@ -16,7 +16,7 @@
 
 ### DEMO 
 
-下面我们使用Java作为开发语言，对接[YQT]()的用户注册接口。
+下面我们使用Java作为开发语言，对接[YQT](http://doc.jia007.com)的用户消费接口。
 
 ```java
 private static String merchantNo = "";//商编
@@ -67,24 +67,13 @@ apiRequest.addParam("key", "value");
 > 服务返回*ApiResponse*对象 包含的属性和对应的方法如下：
 
 public class ApiResponse {
-/**
-* 返回结果集
-*/
+//返回结果集
 private Map<String, String> resultMap;
-
-/**
-* 标识本次请求状态
-*/
+//标识本次请求状态
 private ApiStateEnum state;
-
-/**
-* 返回状态码
-*/
+//返回状态码
 private String code;
-
-/**
-* 返回信息
-*/
+//返回信息
 private String message;
 }
 
