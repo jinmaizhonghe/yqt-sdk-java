@@ -66,7 +66,7 @@ apiRequest.addParam("key", "value");
 
 > 服务返回*ApiResponse*对象 包含的属性和对应的方法如下：
 
-```
+```java
 public class ApiResponse {
 //返回结果集
 private Map<String, String> resultMap;
@@ -77,6 +77,8 @@ private String code;
 //返回信息
 private String message;
 }
+
+```
 
 ```
 
