@@ -1,5 +1,5 @@
 # yqt-sdk-java
-# 本平台服务介绍
+# 平台服务介绍
 
 > YQT-SDK-JAVA是基于[YQT](http://doc.jia007.com)接口封装的开发工具包。她屏蔽了大部分细节、简化了接入流程、同时提供了一些便捷的方法。帮助开发者在接入过程中避开一些常见的问题，让开发者快速接入[YQT](http://doc.jia007.com)的服务。
 
@@ -54,7 +54,7 @@ apiResponse:{"resultMap":
 
 ### 请求参数
 
-> 目前，我们采用自己封装的ApiRequest方式来进行参数传递。
+> 目前，我们采用自己封装的ApiRequest对象来进行参数传递。
 
 ```java
 
@@ -64,7 +64,7 @@ apiRequest.addParam("key", "value");
 
 ### 响应参数
 
-> 服务返回*ApiResponse*对象 包含的属性和对应的方法如下：
+> 服务返回*ApiResponse*对象 包含的属性如下：
 
 ```java
 public class ApiResponse {
