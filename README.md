@@ -43,10 +43,16 @@ System.out.println("apiResponse:" + JSON.toJSONString(apiResponse));
 
 
 Console打印日志为：
-apiResponse:{"resultMap":
-{"code":"1","message":"受理成功","orderAmount":"0.01",
-"orderNo":"11171117185644557301","redirectUrl":"weixin://wxpay/bizpayurl?pr=oyb4sLN","status":"PROCESS"}
-,"state":"SUCCESS"}
+apiResponse:{
+"resultMap":
+    {"code":"1",
+    "message":"受理成功",
+    "orderAmount":"0.01",
+    "orderNo":"11171117185644557301",
+    "redirectUrl":"weixin://wxpay/bizpayurl?pr=oyb4sLN",
+    "status":"PROCESS"},
+"state":"SUCCESS"
+}
 
 ```
 
