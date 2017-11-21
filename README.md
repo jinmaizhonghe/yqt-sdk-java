@@ -1,7 +1,7 @@
 # yqt-sdk-java
-# YQT-SDK 服务介绍
+# 本平台服务介绍
 
-> YQT-SDK是基于[YQT](http://doc.jia007.com)接口封装的开发工具包。她屏蔽了大部分细节、简化了接入流程、同时提供了一些便捷的方法和标准化的参数枚举值。帮助开发者在接入过程中避开一些常见的问题，让开发者快速接入[YQT](http://doc.jia007.com)的服务。
+> YQT-SDK-JAVA是基于[YQT](http://doc.jia007.com)接口封装的开发工具包。她屏蔽了大部分细节、简化了接入流程、同时提供了一些便捷的方法。帮助开发者在接入过程中避开一些常见的问题，让开发者快速接入[YQT](http://doc.jia007.com)的服务。
 
 > *注: 该开发工具包仅支持Java语言，其他语言开发者可以参照[YQT](http://doc.jia007.com)的官方文档。*
 
@@ -77,8 +77,5 @@ private String code;
 //返回信息
 private String message;
 }
-
-```
-
 ```
 
