@@ -1,7 +1,7 @@
 # yqt-sdk-java
 # YQT-SDK In Action
 
-> PP-SDK是基于[YQT](http://www.jia007.com)接口封装的开发工具包。她屏蔽了大部分细节、简化了接入流程、同时提供了一些便捷的方法和标准化的参数枚举值。帮助开发者在接入过程中避开一些常见的问题，让开发者快速接入[YQT](http://payplus.yeepay.com)的服务。
+> YQT-SDK是基于[YQT]()接口封装的开发工具包。她屏蔽了大部分细节、简化了接入流程、同时提供了一些便捷的方法和标准化的参数枚举值。帮助开发者在接入过程中避开一些常见的问题，让开发者快速接入[YQT]()的服务。
 
 > *注: 该开发工具包仅支持Java语言，其他语言开发者可以参照YQT的官方文档。*
 
@@ -12,11 +12,11 @@
 
 ### 准备工作
 
-1. 说的再好都不如一个栗子吃得饱，我们来看下干货。
+1. 说的再好都不如一个栗子吃得饱，让我们一起来看下干货。
 
-### DEMO
+### DEMO 
 
-下面我们使用Java作为开发语言，对接[YQT](http://www.jia007.com)的用户注册接口。
+下面我们使用Java作为开发语言，对接[YQT]()的用户注册接口。
 
 ```java
 private static String merchantNo = "";//商编
@@ -43,7 +43,10 @@ System.out.println("apiResponse:" + JSON.toJSONString(apiResponse));
 
 
 Console打印日志为：
-apiResponse:{"resultMap":{"code":"1","message":"受理成功","orderAmount":"0.01","orderNo":"11171117185644557301","redirectUrl":"weixin://wxpay/bizpayurl?pr=oyb4sLN","status":"PROCESS"},"state":"SUCCESS"}
+apiResponse:{"resultMap":
+{"code":"1","message":"受理成功","orderAmount":"0.01",
+"orderNo":"11171117185644557301","redirectUrl":"weixin://wxpay/bizpayurl?pr=oyb4sLN","status":"PROCESS"}
+,"state":"SUCCESS"}
 
 ```
 
@@ -51,13 +54,12 @@ apiResponse:{"resultMap":{"code":"1","message":"受理成功","orderAmount":"0.0
 
 ### 请求参数
 
-> 目前，我们采用Map方式来进行参数传递。
+> 目前，我们采用自己封装的ApiRequest方式来进行参数传递。
 
 ```java
 
 ApiRequest apiRequest = new ApiRequest(merchantNo, key);
-apiRequest.addParam("orderAmount", "0.01");
-apiRequest.addParam("payTool", "WECHAT_SCAN");
+apiRequest.addParam("key", "value");
 ```
 
 ### 响应参数
@@ -65,16 +67,26 @@ apiRequest.addParam("payTool", "WECHAT_SCAN");
 > 服务返回*ApiResponse*对象 包含的属性和对应的方法如下：
 
 public class ApiResponse {
-
+/**
+* 返回结果集
+*/
 private Map<String, String> resultMap;
 
+/**
+* 标识本次请求状态
+*/
 private ApiStateEnum state;
 
+/**
+* 返回状态码
+*/
 private String code;
 
+/**
+* 返回信息
+*/
 private String message;
 }
-
 
 ```
 
