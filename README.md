@@ -19,27 +19,27 @@
 下面我们使用Java作为开发语言，对接[YQT](http://doc.jia007.com)的用户消费接口。
 
 ```java
-    private static String merchantNo = "";//商编
-    private static String key = “”;//秘钥
-    String url = "https://api.jia007.com/api-center/rest/v1.0/yqt/consume";
-    ApiRequest apiRequest = new ApiRequest(merchantNo, key);
-    apiRequest.setSupportSign(false);
-    apiRequest.setEncryptType(EncryptTypeEnum.AES);
-    apiRequest.addParam("requestNo", "TEST00001");
-    apiRequest.addParam("merchantNo", "1051100110000070");
-    apiRequest.addParam("orderAmount", "0.01");
-    apiRequest.addParam("payTool", "WECHAT_SCAN");
-    apiRequest.addParam("openId", "testopenid");
-    apiRequest.addParam("orderDate", "2017-10-19 16:18:04");
-    apiRequest.addParam("productName", "测试");
-    apiRequest.addParam("serverCallbackUrl", "http://www.qq.com");
-    apiRequest.addParam("sceneType", "MIS");
-    apiRequest.addParam("clientIp", "192.168.1.1");
-    System.out.println("apiRequest:" + apiRequest.toString());
-    System.out.println("url:" + url);
-    ApiResponse apiResponse = ApiClient.post(url, apiRequest);
-    System.out.println(apiResponse.getState());
-    System.out.println("apiResponse:" + JSON.toJSONString(apiResponse));
+private static String merchantNo = "";//商编
+private static String key = “”;//秘钥
+String url = "https://api.jia007.com/api-center/rest/v1.0/yqt/consume";
+ApiRequest apiRequest = new ApiRequest(merchantNo, key);
+apiRequest.setSupportSign(false);
+apiRequest.setEncryptType(EncryptTypeEnum.AES);
+apiRequest.addParam("requestNo", "TEST00001");
+apiRequest.addParam("merchantNo", "1051100110000070");
+apiRequest.addParam("orderAmount", "0.01");
+apiRequest.addParam("payTool", "WECHAT_SCAN");
+apiRequest.addParam("openId", "testopenid");
+apiRequest.addParam("orderDate", "2017-10-19 16:18:04");
+apiRequest.addParam("productName", "测试");
+apiRequest.addParam("serverCallbackUrl", "http://www.qq.com");
+apiRequest.addParam("sceneType", "MIS");
+apiRequest.addParam("clientIp", "192.168.1.1");
+System.out.println("apiRequest:" + apiRequest.toString());
+System.out.println("url:" + url);
+ApiResponse apiResponse = ApiClient.post(url, apiRequest);
+System.out.println(apiResponse.getState());
+System.out.println("apiResponse:" + JSON.toJSONString(apiResponse));
 
 
 Console打印日志为：
