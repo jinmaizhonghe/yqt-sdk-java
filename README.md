@@ -1,9 +1,9 @@
 # yqt-sdk-java
 # 平台服务介绍
 
-> YQT-SDK-JAVA是基于[YQT](http://doc.jia007.com)接口封装的开发工具包。她屏蔽了大部分细节、简化了接入流程、同时提供了一些便捷的方法。帮助开发者在接入过程中避开一些常见的问题，让开发者快速接入[YQT](http://doc.jia007.com)的服务。
+> YQT-SDK-JAVA是基于[YQT](https://doc.jia007.com/api-foundation-doc/yqt-api-center/overview)接口封装的开发工具包。她屏蔽了大部分细节、简化了接入流程、同时提供了一些便捷的方法。帮助开发者在接入过程中避开一些常见的问题，让开发者快速接入[YQT](https://doc.jia007.com/api-foundation-doc/yqt-api-center/overview)的服务。
 
-> *注: 该开发工具包仅支持Java语言，其他语言开发者可以参照[YQT](http://doc.jia007.com)的官方文档。*
+> *注: 该开发工具包仅支持Java语言，其他语言开发者可以参照[YQT](https://doc.jia007.com/api-foundation-doc/yqt-api-center/overview)的官方文档。*
 
 ## 一、快速接入
 
@@ -16,7 +16,7 @@
 
 ### DEMO 
 
-下面我们使用Java作为开发语言，对接[YQT](http://doc.jia007.com)的用户消费接口。
+下面我们使用Java作为开发语言，对接[YQT](https://doc.jia007.com/api-foundation-doc/yqt-api-center/overview)的用户消费接口。
 
 ```java
 private static String merchantNo = "";//商编
