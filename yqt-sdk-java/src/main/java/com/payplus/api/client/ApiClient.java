@@ -74,6 +74,7 @@ public class ApiClient {
      */
     public static void downloadFile(String url, ApiRequest apiRequest, String filePath) {
         downloadFile(url, apiRequest, filePath, API_DOWNLOAD_TIME_OUT);
+        
     }
 
     /**
