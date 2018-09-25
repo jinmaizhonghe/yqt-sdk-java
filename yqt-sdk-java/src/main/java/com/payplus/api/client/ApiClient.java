@@ -130,8 +130,8 @@ public class ApiClient {
      * @param filePath
      * @return
      */
-    public static ApiResponse uploadFile(String baseUrl, ApiRequest apiRequest, String filePath) {
-        return uploadFile(baseUrl, apiRequest, filePath, API_UPLOAD_TIME_OUT);
+    public static ApiResponse uploadFile(String baseUrl, ApiRequest apiRequest, String filePath,String fileKey) {
+        return uploadFile(baseUrl, apiRequest, filePath, API_UPLOAD_TIME_OUT,fileKey);
     }
 
     /**
@@ -143,7 +143,7 @@ public class ApiClient {
      *          超时时间,单位:毫秒
      * @return
      */
-    public static ApiResponse uploadFile(String baseUrl, ApiRequest apiRequest, String filePath, int timeoutMillis) {
+    public static ApiResponse uploadFile(String baseUrl, ApiRequest apiRequest, String filePath, int timeoutMillis,String fileKey) {
         /** 参数校验 */
         checkParams(baseUrl, apiRequest, timeoutMillis);
         /** 组装参数 */
@@ -156,12 +156,8 @@ public class ApiClient {
             /** 组装uploadUrl,将相关参数添加至baseUrl中 */
             String uploadUrl = constructUploadUrl(baseUrl, postParamMap);
             /** 上传文件 */
-            String responseText = HttpClient4Utils.sendUploadFileHttpRequest(uploadUrl, file, REMOTE_SERVER_UPLOAD_PARAM,
+            String responseText = HttpClient4Utils.sendUploadFileHttpRequest(uploadUrl, file, fileKey,
                                                     HttpClient4Utils.DEFAULT_CHARSET, timeoutMillis);
-            /** 响应数据解析 */
-            if (responseText.indexOf(PARAM_DATA) == -1) {
-                throw new RuntimeException("upload file failed, response text:[" + responseText + "]");
-            }
             return parseResponse(responseText, apiRequest);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -237,7 +233,11 @@ public class ApiClient {
             return AESUtil.encrypt(paramJsonStr, apiRequest.getSecretKey().substring(0, 16));
         } else {
            /** _3DESUtil 加密与解密的密钥，使用商户密钥的前24位 */
-           return _3DESUtil.des3EecodeToString(apiRequest.getSecretKey().substring(0, 24), paramJsonStr);
+           try {
+               return _3DESUtil.des3EecodeToString(apiRequest.getSecretKey().substring(0, 24), paramJsonStr);
+           } catch (Exception e) {
+               throw new RuntimeException(e);
+           }
         }
     }
 
@@ -272,7 +272,7 @@ public class ApiClient {
 
             /** 请求失败时,仅返回错误码code及错误信息msg */
             if (!SUCCESS_CODE.equals(resultMap.get(RESPONSE_PARAM_CODE))) {
-                apiResponse.setState(ApiStateEnum.FAIL);
+                apiResponse.setState(ApiStateEnum.valueOf(resultMap.get("status")));
                 apiResponse.setCode(resultMap.get(RESPONSE_PARAM_CODE));
                 apiResponse.setMessage(resultMap.get(RESPONSE_PARAM_MESSAGE));
                 return apiResponse;

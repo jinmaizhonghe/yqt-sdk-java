@@ -8,5 +8,6 @@ package com.payplus.api.enumtype;
  */
 public enum ApiStateEnum {
     SUCCESS,
+    PROCESSING,
     FAIL;
 }
