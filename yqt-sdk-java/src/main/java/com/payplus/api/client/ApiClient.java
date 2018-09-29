@@ -10,6 +10,7 @@ import com.payplus.api.security._3DESUtil;
 import com.payplus.api.util.CloseUtils;
 import com.payplus.api.util.HttpClient4Utils;
 import com.payplus.api.util.StringUtils;
+
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
@@ -32,13 +33,14 @@ public class ApiClient {
     private static final String RESPONSE_PARAM_MESSAGE = "message";
     private static final String SUCCESS_CODE = "1";
     private static final String REMOTE_SERVER_UPLOAD_PARAM = "file";
-    private static final int API_BUFFER_SIZE = 10*1024;
-    private static final int API_POST_TIME_OUT = 30*1000;
-    private static final int API_DOWNLOAD_TIME_OUT = 30*60*1000;
-    private static final int API_UPLOAD_TIME_OUT = 5*60*1000;
+    private static final int API_BUFFER_SIZE = 10 * 1024;
+    private static final int API_POST_TIME_OUT = 30 * 1000;
+    private static final int API_DOWNLOAD_TIME_OUT = 30 * 60 * 1000;
+    private static final int API_UPLOAD_TIME_OUT = 5 * 60 * 1000;
 
     /**
      * post请求, 超时时间默认为: API_POST_TIME_OUT
+     *
      * @param url
      * @param apiRequest
      * @return
@@ -49,10 +51,10 @@ public class ApiClient {
 
     /**
      * post请求(可指定超时时间)
+     *
      * @param url
      * @param apiRequest
-     * @param timeoutMillis
-     *           超时时间,单位:毫秒
+     * @param timeoutMillis 超时时间,单位:毫秒
      * @return
      */
     public static ApiResponse post(String url, ApiRequest apiRequest, int timeoutMillis) {
@@ -68,82 +70,92 @@ public class ApiClient {
 
     /**
      * 文件下载至filePath, 超时时间时间默认为: API_DOWNLOAD_TIME_OUT
+     *
      * @param url
      * @param apiRequest
      * @param filePath
      */
     public static void downloadFile(String url, ApiRequest apiRequest, String filePath) {
         downloadFile(url, apiRequest, filePath, API_DOWNLOAD_TIME_OUT);
-        
+
     }
 
     /**
      * 文件下载至filePath, 可指定超时时间
+     *
      * @param url
      * @param apiRequest
      * @param filePath
-     * @param timeoutMillis
-     *          超时时间,单位:毫秒
+     * @param timeoutMillis 超时时间,单位:毫秒
      * @return
      */
     public static void downloadFile(String url, ApiRequest apiRequest, String filePath, int timeoutMillis) {
         /** 参数校验 */
         checkParams(url, apiRequest, timeoutMillis);
-        /** 组装参数 */
-        Map<String, String> postParamMap = buildHttpRequestParamMap(apiRequest);
-        FileOutputStream fileOutputStream = null;
-        BufferedInputStream bufferedInputStream = null;
+        InputStream input = null;
+        OutputStream out = null;
         try {
-            /** 根据path创建文件 */
+            String content = getContent(url, apiRequest, timeoutMillis);
             File file = new File(filePath);
             file.getParentFile().mkdirs();
             file.createNewFile();
-            /** 发起请求获取文件流 */
-//            InputStream responseStream = HttpClient4Utils.sendHttpRequestStream(url, postParamMap, HttpClient4Utils.DEFAULT_CHARSET, true, timeoutMillis);
-            /** 写文件 */
-//            fileOutputStream = new FileOutputStream(file);
-//            bufferedInputStream = new BufferedInputStream(responseStream);
-//            byte[] by = new byte[API_BUFFER_SIZE];
-//            while (true) {
-//                int i = bufferedInputStream.read(by);
-//                if (i == -1) {
-//                    break;
-//                }
-//                fileOutputStream.write(by, 0, i);
-//            }
-            String content = HttpClient4Utils.sendHttpRequest(url, postParamMap, HttpClient4Utils.DEFAULT_CHARSET, true, timeoutMillis);
-            InputStream input = new ByteArrayInputStream(content.getBytes());// 数据输入流处理
-            OutputStream out = new BufferedOutputStream(new FileOutputStream(filePath));
+            input = new ByteArrayInputStream(content.getBytes());// 数据输入流处理
+            out = new BufferedOutputStream(new FileOutputStream(filePath));
             IOUtils.copy(input, out);
             out.flush();
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
-            CloseUtils.close(fileOutputStream, bufferedInputStream);
+            CloseUtils.close(out, input);
         }
     }
 
     /**
+     * 文件下载返回文件流 可指定超时时间
+     *
+     * @param url
+     * @param apiRequest
+     * @param timeoutMillis 超时时间,单位:毫秒
+     * @return
+     */
+    public static InputStream downloadFile(String url, ApiRequest apiRequest) {
+        /** 参数校验 */
+        checkParams(url, apiRequest, API_DOWNLOAD_TIME_OUT);
+        try {
+            String content = getContent(url, apiRequest, API_DOWNLOAD_TIME_OUT);
+            return new ByteArrayInputStream(content.getBytes());// 数据输入流处理
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static String getContent(String url, ApiRequest apiRequest, int timeoutMillis) {
+        Map<String, String> postParamMap = buildHttpRequestParamMap(apiRequest);
+        return HttpClient4Utils.sendHttpRequest(url, postParamMap, HttpClient4Utils.DEFAULT_CHARSET, true, timeoutMillis);
+    }
+
+    /**
      * 将filePath指定的文件上传至服务器, 默认超时时间为: API_UPLOAD_TIME_OUT
+     *
      * @param baseUrl
      * @param apiRequest
      * @param filePath
      * @return
      */
-    public static ApiResponse uploadFile(String baseUrl, ApiRequest apiRequest, String filePath,String fileKey) {
-        return uploadFile(baseUrl, apiRequest, filePath, API_UPLOAD_TIME_OUT,fileKey);
+    public static ApiResponse uploadFile(String baseUrl, ApiRequest apiRequest, String filePath, String fileKey) {
+        return uploadFile(baseUrl, apiRequest, filePath, API_UPLOAD_TIME_OUT, fileKey);
     }
 
     /**
      * 将filePath指定的文件上传至服务器, 可指定超时时间
+     *
      * @param baseUrl
      * @param apiRequest
      * @param filePath
-     * @param timeoutMillis
-     *          超时时间,单位:毫秒
+     * @param timeoutMillis 超时时间,单位:毫秒
      * @return
      */
-    public static ApiResponse uploadFile(String baseUrl, ApiRequest apiRequest, String filePath, int timeoutMillis,String fileKey) {
+    public static ApiResponse uploadFile(String baseUrl, ApiRequest apiRequest, String filePath, int timeoutMillis, String fileKey) {
         /** 参数校验 */
         checkParams(baseUrl, apiRequest, timeoutMillis);
         /** 组装参数 */
@@ -157,14 +169,14 @@ public class ApiClient {
             String uploadUrl = constructUploadUrl(baseUrl, postParamMap);
             /** 上传文件 */
             String responseText = HttpClient4Utils.sendUploadFileHttpRequest(uploadUrl, file, fileKey,
-                                                    HttpClient4Utils.DEFAULT_CHARSET, timeoutMillis);
+                    HttpClient4Utils.DEFAULT_CHARSET, timeoutMillis);
             return parseResponse(responseText, apiRequest);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static Map<String, String> buildHttpRequestParamMap( ApiRequest apiRequest) {
+    private static Map<String, String> buildHttpRequestParamMap(ApiRequest apiRequest) {
         /** 生成加密data */
         String data = constructData(apiRequest);
         Map<String, String> httpRequestParamMap = new HashMap<String, String>();
@@ -175,6 +187,7 @@ public class ApiClient {
 
     /**
      * 参数校验
+     *
      * @param url
      * @param apiRequest
      * @param timeoutMillis
@@ -205,6 +218,7 @@ public class ApiClient {
 
     /**
      * 生成签名sign
+     *
      * @param apiRequest
      * @return
      */
@@ -218,6 +232,7 @@ public class ApiClient {
 
     /**
      * 生成加密data
+     *
      * @param apiRequest
      * @return
      */
@@ -232,17 +247,18 @@ public class ApiClient {
             /** AESUtil 加密与解密的密钥，截取商户密钥的前16位 */
             return AESUtil.encrypt(paramJsonStr, apiRequest.getSecretKey().substring(0, 16));
         } else {
-           /** _3DESUtil 加密与解密的密钥，使用商户密钥的前24位 */
-           try {
-               return _3DESUtil.des3EecodeToString(apiRequest.getSecretKey().substring(0, 24), paramJsonStr);
-           } catch (Exception e) {
-               throw new RuntimeException(e);
-           }
+            /** _3DESUtil 加密与解密的密钥，使用商户密钥的前24位 */
+            try {
+                return _3DESUtil.des3EecodeToString(apiRequest.getSecretKey().substring(0, 24), paramJsonStr);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
     /**
      * 解析响应串
+     *
      * @param responseText
      * @return
      */
@@ -253,7 +269,8 @@ public class ApiClient {
         try {
             ApiResponse apiResponse = new ApiResponse();
             if (responseText.contains(RESPONSE_PARAM_CODE)) {
-                Map<String, String> errorResponseMap = JSON.parseObject(responseText, new TypeReference<TreeMap<String, String>>() {});
+                Map<String, String> errorResponseMap = JSON.parseObject(responseText, new TypeReference<TreeMap<String, String>>() {
+                });
                 apiResponse.setState(ApiStateEnum.FAIL);
                 apiResponse.setCode(errorResponseMap.get(RESPONSE_PARAM_CODE));
                 apiResponse.setMessage(errorResponseMap.get(RESPONSE_PARAM_MESSAGE));
@@ -268,7 +285,8 @@ public class ApiClient {
                 responseJSONStr = _3DESUtil.des3DecodeToString(apiRequest.getSecretKey().substring(0, 24), responseText);
             }
 //            System.out.println("===> responseJSONStr: " + responseJSONStr);
-            Map<String, String> resultMap = JSON.parseObject(responseJSONStr,new TypeReference<TreeMap<String, String>>() {});
+            Map<String, String> resultMap = JSON.parseObject(responseJSONStr, new TypeReference<TreeMap<String, String>>() {
+            });
 
             /** 请求失败时,仅返回错误码code及错误信息msg */
             if (!SUCCESS_CODE.equals(resultMap.get(RESPONSE_PARAM_CODE))) {

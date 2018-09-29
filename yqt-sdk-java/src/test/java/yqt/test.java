@@ -7,9 +7,14 @@ import com.alibaba.fastjson.JSON;
 import com.payplus.api.client.ApiResponse;
 import com.payplus.api.enumtype.EncryptTypeEnum;
 import com.payplus.api.security.AESUtil;
+import com.payplus.api.util.CloseUtils;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.*;
+
+import org.apache.commons.io.IOUtils;
 
 public class test {
 
@@ -23,7 +28,7 @@ public class test {
         //注册查询
         //testRegisteredMerchantEnquiries();
         //上传图片
-        testFileUpload();
+//        testFileUpload();
         //支付参数新增接口
         //testNewPaymentParameters();
         //支付参数查询接口
@@ -37,7 +42,9 @@ public class test {
         //退款查询
         //testRefundQuery();
         //对账单下载
-        //testDownloadStatement();
+        testDownloadStatement();
+        //对账单下载返回文件流
+//        testDownloadStatementStream();
         //代理商查询商户信息打款接口
         //testCheckMerchantPayment();
 
@@ -322,23 +329,48 @@ public class test {
         System.out.println("apiResponse:" + JSON.toJSONString(apiResponse));
     }
 
-    private static void testDownloadStatement() throws Exception {
-//对账单下载
-        String url = "https://api.jia007.com/api-center/rest/v2.0/yqt/downloadFile";
 
+    private static void testDownloadStatement() {
+        //对账单下载
+        String url = "https://api.jia007.com/api-center/rest/v2.0/yqt/downloadFile";
         ApiRequest apiRequest = new ApiRequest(agentNo, agentKey);
         apiRequest.setSupportSign(false);
         apiRequest.setEncryptType(EncryptTypeEnum.AES);
+        apiRequest.addParam("checkDate", "2018-09-11");//交易日期
+        apiRequest.addParam("bizType", "TRADE");//账单业务类型:微信支付宝WA
+        try {
+            // 文件下载路径
+            String filePath = "/Users/xxx/Desktop/test.csv";
+            ApiClient.downloadFile(url, apiRequest,filePath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-        apiRequest.addParam("checkDate", "2018-06-29");
-        apiRequest.addParam("bizType", "TRADE");
-        //apiRequest.addParam("bizType", "REFUND");
+    /**
+     * 下载文件返回文件流
+     */
+    private static void testDownloadStatementStream() {
+        //对账单下载
+        String url = "https://api.jia007.com/api-center/rest/v2.0/yqt/downloadFile";
+        ApiRequest apiRequest = new ApiRequest(agentNo, agentKey);
+        apiRequest.setSupportSign(false);
+        apiRequest.setEncryptType(EncryptTypeEnum.AES);
+        apiRequest.addParam("checkDate", "2018-09-11");//交易日期
+        apiRequest.addParam("bizType", "TRADE");//账单业务类型:微信支付宝WA
+        InputStream inputStream = null;
 
-        System.out.println("apiRequest:" + apiRequest.toString());
-        System.out.println("url:" + url);
-        ApiResponse apiResponse = ApiClient.post(url, apiRequest);
-        System.out.println(apiResponse.getState());
-        System.out.println("apiResponse:" + JSON.toJSONString(apiResponse));
+        try {
+            // 文件下载路径
+            inputStream= ApiClient.downloadFile(url, apiRequest);
+            // 文件流处理
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            CloseUtils.close(inputStream);
+        }
     }
 
     private static void testCheckMerchantPayment() throws Exception {
