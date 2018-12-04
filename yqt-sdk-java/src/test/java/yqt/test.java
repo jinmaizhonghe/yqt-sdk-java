@@ -78,6 +78,7 @@ public class test {
         apiRequest.addParam("bankAccountNo", "6214**********87");
         apiRequest.addParam("bankAccountType", "PRIVATE_CASH");
         apiRequest.addParam("bankBranchCode", "308100005168");
+        apiRequest.addParam("qualifications", "{\"ID_CARD_FRONT\":\"/2018-12-04/4fee4fe855c947ab81fcc5f449ccf598.jpg\", \"LICENSE\":\"[\\\"/2018-12-04/4fee4fe855c947ab81fcc5f449ccf598.jpg\\\",\\\"/2018-12-04/4fee4fe855c947ab81fcc5f449ccf598.jpg\\\"]\"}");
         apiRequest.addParam("serverCallbackUrl", "http://pay.weixin.cn/notify/JhNotify");
 
         List<PayProduct> payProductList = new ArrayList<PayProduct>();
